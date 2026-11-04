@@ -2506,6 +2506,22 @@
     ]
   };
 
+  // 69 (trámite 408), leído el 4 de noviembre de 2026 solo hasta la nota legal: aceptarla le toca al ciudadano
+  F[69] = {
+    titulo: 'Nota legal',
+    subtitulo: 'Certificación técnica para fines judiciales y de seguros',
+    icono: 'ph-scales',
+    campos: [
+      { tipo: 'nota', estilo: 'aviso', titulo: 'Nota legal', lineas: [
+        'Si proporcionas información falsa, cometes el delito de estafa informática (artículo 10 de la Ley Especial contra los Delitos Informáticos y Conexos) y el trámite se elimina automáticamente',
+        'El MARN puede tomar las medidas que considere pertinentes, incluido el aviso a la Fiscalía General de la República',
+        'Después de pagar, no se devuelve el dinero'
+      ] },
+      { tipo: 'opciones', nombre: 'confirmacion', etiqueta: '¿Aceptas la nota legal?', marcado: true, opciones: [{ valor: 'acepto', texto: 'He leído y acepto los términos legales', icono: 'ph-handshake' }] }
+    ],
+    pasos: [{ ...ENVIAR, campos: [{ tipo: 'nota', estilo: 'info', lineas: ['Después de aceptar la nota legal, el MARN te pide los datos y los documentos del trámite'] }, ...ENVIAR.campos] }]
+  };
+
   /* ===== Agricultura (MAG) ===== */
   // MAG (mag.ventanilla.simple.sv, trámite 58): el mismo formulario para las dos exoneraciones (agrícola, 66, y veterinaria, 67),
   // con el tipo ya elegido: solicitante, producto y factura con sus documentos (el último paso)
@@ -3183,6 +3199,89 @@
       { ...PAGO, monto: '$39.55' }
     ]
   };
+
+  /* 35 a 43, 46 y 47 (VMT) y 117 (MOP), leídos el 4 de noviembre de 2026 solo hasta la nota legal o la declaración jurada.
+     Aceptarla le toca al ciudadano y en las pruebas no se aceptó, así que lo que sigue en el portal no se vio: el último
+     paso lo dice. El "¿Deseas continuar con el trámite?" del portal no se copió, porque en el rediseño no se pregunta.
+     Mismo formulario del portal: 35 y 36 (trámite 351) y 40, 41 y 43 (trámite 320). */
+  const ASESORIA_VMT = { tipo: 'nota', estilo: 'info', titulo: 'Asesoría', lineas: ['Si tienes dudas sobre el trámite, escribe al VMT por WhatsApp al 7124-7428 (solo mensajes) o al correo vmtdigital@mop.gob.sv'] };
+  const notaLegalVmt = (direccion, extra = []) => ({ tipo: 'nota', estilo: 'aviso', titulo: 'Nota legal', lineas: [
+    'Si envías información falsa, cometes el delito de estafa informática (artículo 10 de la Ley Especial contra los Delitos Informáticos y Conexos) y el trámite se elimina automáticamente',
+    `${direccion} puede dar aviso a la Fiscalía General de la República para que determine los efectos legales`,
+    ...extra
+  ] });
+  const aceptaNota = (nombre = 'acepto_terminos', valor = 'acepto') => ({ tipo: 'opciones', nombre, etiqueta: '¿Aceptas la nota legal?', marcado: true, opciones: [{ valor, texto: 'He leído y acepto los términos legales', icono: 'ph-handshake' }] });
+  const sigueEnPortal = lineas => ({ ...ENVIAR, campos: [{ tipo: 'nota', estilo: 'info', lineas }, ...ENVIAR.campos] });
+  const SIGUE_VMT = sigueEnPortal(['Después de aceptar la nota legal, el VMT te pide los datos y los documentos del trámite']);
+  const notaLegalTramite = ({ subtitulo, icono, direccion, nombre, antes = [], despues = [], sigue = SIGUE_VMT }) => ({
+    titulo: 'Nota legal',
+    subtitulo,
+    icono,
+    campos: [ASESORIA_VMT, ...antes, notaLegalVmt(direccion), aceptaNota(nombre), ...despues],
+    pasos: [sigue]
+  });
+  const TRANSPORTE = 'La Dirección General de Transporte Terrestre';
+  const CARGA = 'La Dirección General de Transporte de Carga';
+
+  const apostillaVmt = documento => ({
+    titulo: 'Antes de empezar',
+    subtitulo: `Apostilla de la ${documento} de licencia de conducir`,
+    icono: 'ph-seal-check',
+    campos: [
+      ASESORIA_VMT,
+      { tipo: 'nota', estilo: 'requisitos', titulo: 'Necesitas el código de SERTRACEN', lineas: ['Antes de iniciar, SERTRACEN te envía por correo un código de autorización de tu documento. Con ese código el VMT hace la verificación'] },
+      { tipo: 'opciones', nombre: 'terminos', etiqueta: '¿Tienes el código de autorización?', marcado: true, opciones: [{ valor: 'Confirmo', texto: 'Confirmo que tengo el código', icono: 'ph-seal-check' }] },
+      notaLegalVmt('La Dirección General de Transporte')
+    ],
+    pasos: [sigueEnPortal(['El VMT verifica el código de SERTRACEN y después te pide los datos del trámite'])]
+  });
+  F[35] = apostillaVmt('certificación');
+  F[36] = apostillaVmt('constancia de récord');
+
+  F[37] = {
+    titulo: 'Revisión de requisitos',
+    subtitulo: 'Ten a la mano estos documentos en PDF, legibles y sin errores',
+    icono: 'ph-handshake',
+    campos: [
+      ASESORIA_VMT,
+      { tipo: 'nota', estilo: 'requisitos', titulo: 'Documentos del representante del menor', lineas: [
+        '## Obligatorios',
+        '- NIT del menor',
+        '- Boleta de los exámenes de manejo aprobados',
+        '- Fianza moral: documento privado ante notario en el que te comprometes a responder por los daños a terceros que ocasione el menor',
+        '- Partida de nacimiento del menor, de no más de 6 meses. La edad mínima para pedir la licencia es 15 años',
+        '- Fianza bancaria de $571.43 por daños a terceros, vigente hasta que el menor cumpla 18 años',
+        '- Si solo está presente uno de los padres: declaración jurada original que explique la ausencia del otro. El trámite lo hace el padre o la madre presente',
+        '- Si faltan los dos padres: certificación notarial de la resolución judicial que te faculta para representar al menor',
+        '## Adicional',
+        '- Si ayudas al representante del menor a usar SIMPLE: el poder con el que lo representas',
+        'Los documentos se piden a medida que avanzas en el trámite'
+      ] }
+    ],
+    pasos: [
+      { titulo: 'Declaración jurada', subtitulo: 'Lee y acepta los términos', campos: [
+        { tipo: 'nota', estilo: 'aviso', titulo: 'Declaración jurada', lineas: [
+          'Declaro bajo juramento que conozco los requisitos previos. Si miento en la información o entrego documentos alterados o falsificados, cometo el delito de estafa informática (artículo 10 de la Ley Especial contra los Delitos Informáticos y Conexos) y el trámite queda improcedente. La Dirección de Tránsito Terrestre puede tomar acciones legales y dar aviso a la Fiscalía General de la República',
+          'Señalo como medio para recibir notificaciones la plataforma SIMPLE y, para los efectos legales, el correo electrónico que proporcione en el trámite'
+        ] },
+        { tipo: 'opciones', nombre: 'terminos_condiciones_tramite', etiqueta: '¿Aceptas la declaración jurada?', marcado: true, opciones: [{ valor: 'si_acepto_terminos', texto: 'Lo declaro bajo juramento', icono: 'ph-seal-check' }] }
+      ] },
+      sigueEnPortal(['Después de la declaración jurada, el VMT te pide los datos y los documentos del trámite'])
+    ]
+  };
+
+  F[38] = notaLegalTramite({ subtitulo: 'Autorización para realizar el control de emisión de gases', icono: 'ph-gauge', direccion: TRANSPORTE });
+  F[39] = notaLegalTramite({ subtitulo: 'Certificación de tarifario', icono: 'ph-receipt', direccion: TRANSPORTE, nombre: 'acepto_terminos_0' });
+  F[40] = notaLegalTramite({ subtitulo: 'Constancia de capacidad', icono: 'ph-truck', direccion: CARGA });
+  F[41] = notaLegalTramite({ subtitulo: 'Constancia de modificación a la capacidad', icono: 'ph-truck-trailer', direccion: CARGA });
+  F[42] = notaLegalTramite({ subtitulo: 'Constancia para la exención de IVA', icono: 'ph-currency-dollar', direccion: TRANSPORTE });
+  F[43] = notaLegalTramite({ subtitulo: 'Modificación física de vehículo de transporte de carga', icono: 'ph-wrench', direccion: CARGA });
+  F[46] = notaLegalTramite({ subtitulo: 'Registro de transportista de carga', icono: 'ph-identification-badge', direccion: CARGA, antes: [
+    { tipo: 'nota', estilo: 'aviso', titulo: 'Usa un correo nuevo', lineas: ['No uses un correo electrónico con el que ya hayas hecho otro registro de transportista: el trámite se deniega automáticamente'] }
+  ] });
+  F[47] = notaLegalTramite({ subtitulo: 'Renovación de registro de transportista de carga', icono: 'ph-arrows-clockwise', direccion: CARGA });
+  F[117] = notaLegalTramite({ subtitulo: 'Constancia de competencia', icono: 'ph-crane', direccion: 'La Dirección General de Caminos',
+    sigue: sigueEnPortal(['Después de aceptar la nota legal, el MOP te pide los datos y los documentos del trámite']) });
 
   /* ===== CEPA ===== */
   // 79 (trámite 190) y 80 (trámite 280): el último "Siguiente" envía la solicitud a CEPA, que confirma la disponibilidad y el
@@ -4177,6 +4276,57 @@
       { tipo: 'texto', nombre: 'otros_estudios', etiqueta: 'Otros estudios', ayuda: 'Hasta 4 más, con los mismos datos de cada uno', max: 1000, opcional: true }
     ],
     pasos: [ENVIAR]
+  };
+
+  /* ===== ISBM ===== */
+  // 88 (trámite 434) y 89 (trámite 426), leídos el 4 de noviembre de 2026 solo hasta la declaración jurada y la cláusula
+  // antisoborno: aceptarlas le toca al ciudadano. El 89 pide además el DUI del docente fallecido.
+  const DECLARACION_ISBM = [
+    { tipo: 'nota', estilo: 'aviso', titulo: 'Declaración jurada', lineas: [
+      'Declaro bajo juramento que la información del formulario y de los documentos anexos es verdadera y cumple los requisitos legales. Asumo la responsabilidad administrativa, civil y penal por cualquier falsedad o alteración',
+      'Acepto recibir notificaciones por correo electrónico y por SIMPLE.SV. Si se comprueban irregularidades, la autoridad puede anular de oficio el trámite y aplicar las sanciones que correspondan'
+    ] },
+    { tipo: 'nota', estilo: 'aviso', titulo: 'Cláusula antisoborno', lineas: [
+      'Está prohibido ofrecer, prometer, pedir o entregar, directa o indirectamente, dinero, regalos, beneficios indebidos, favores u otro incentivo a servidores, empleados o funcionarios del ISBM, o a terceros relacionados, para acelerar, cambiar o influir en el resultado del trámite',
+      'El ISBM tiene un Sistema de Gestión Antisoborno según la norma ISO 37001. Cualquier intento de soborno o práctica corrupta puede llevar al rechazo, la suspensión o la cancelación del trámite, además de las sanciones administrativas, civiles o penales',
+      'Usar la plataforma implica aceptar este compromiso y actuar con integridad, transparencia y apego a la legalidad'
+    ] }
+  ];
+  const ACEPTA_ISBM = { tipo: 'opciones', nombre: 'terminosCondiciones', etiqueta: '¿Aceptas la declaración jurada y la cláusula antisoborno?', marcado: true, opciones: [{ valor: 'si', texto: 'He leído y acepto los términos', icono: 'ph-seal-check' }] };
+  const SIGUE_ISBM = { ...ENVIAR, campos: [{ tipo: 'nota', estilo: 'info', lineas: ['Después de aceptar, el ISBM te pide los datos y los documentos del trámite'] }, ...ENVIAR.campos] };
+  F[88] = {
+    titulo: 'Declaración jurada',
+    subtitulo: 'Ayuda económica por la adquisición de anteojos',
+    icono: 'ph-eye',
+    campos: [...DECLARACION_ISBM, ACEPTA_ISBM],
+    pasos: [SIGUE_ISBM]
+  };
+  F[89] = {
+    titulo: 'Declaración jurada',
+    subtitulo: 'Ayuda económica para gastos funerarios',
+    icono: 'ph-flower-lotus',
+    campos: [
+      ...DECLARACION_ISBM,
+      { tipo: 'texto', nombre: 'duiDocente', etiqueta: 'DUI del docente fallecido', ...FORMATO_DUI },
+      ACEPTA_ISBM
+    ],
+    pasos: [SIGUE_ISBM]
+  };
+
+  /* ===== Alcaldía Santa Ana Oeste ===== */
+  // 103 (trámite 353), leído el 4 de noviembre de 2026 solo hasta la nota legal: aceptarla le toca al ciudadano
+  F[103] = {
+    titulo: 'Nota legal',
+    subtitulo: 'Solvencia municipal y pago de impuestos municipales',
+    icono: 'ph-bank',
+    campos: [
+      { tipo: 'nota', estilo: 'aviso', titulo: 'Nota legal', lineas: [
+        'Si envías información falsa, cometes el delito de estafa informática (artículo 10 de la Ley Especial contra los Delitos Informáticos y Conexos) y el trámite se elimina automáticamente',
+        'La alcaldía puede dar aviso a la Fiscalía General de la República para que determine los efectos legales'
+      ] },
+      { tipo: 'opciones', nombre: 'confirmacion', etiqueta: '¿Aceptas la nota legal?', marcado: true, opciones: [{ valor: 'acepto', texto: 'He leído y acepto los términos legales', icono: 'ph-handshake' }] }
+    ],
+    pasos: [{ ...ENVIAR, campos: [{ tipo: 'nota', estilo: 'info', lineas: ['Después de aceptar la nota legal, la alcaldía te pide los datos del trámite'] }, ...ENVIAR.campos] }]
   };
 
   window.FORMULARIOS_TRAMITES = F;
