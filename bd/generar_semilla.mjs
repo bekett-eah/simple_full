@@ -1,7 +1,7 @@
 // Genera bd/semilla_tramites.sql a partir de los datos del rediseño:
-//   src/data/catalogo-landing.js  → instituciones, categorías y los 118 trámites
-//   nuevoDiseño/canales.js        → nivel de WhatsApp y trámites judiciales
-//   nuevoDiseño/formularios.js    → primer paso de cada formulario (campos, opciones y reglas)
+//   web/src/data/catalogo-landing.js  → instituciones, categorías y los 118 trámites
+//   web/app/canales.js                → nivel de WhatsApp y trámites judiciales
+//   web/app/formularios.js            → primer paso de cada formulario (campos, opciones y reglas)
 // Uso: node bd/generar_semilla.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -10,9 +10,9 @@ import vm from 'node:vm';
 const raiz = new URL('..', import.meta.url);
 const cargar = (ruta, contexto) => vm.runInNewContext(readFileSync(new URL(ruta, raiz), 'utf8'), contexto);
 const window = {};
-cargar('src/data/catalogo-landing.js', { window });
-cargar('nuevoDiseño/canales.js', { window });
-cargar('nuevoDiseño/formularios.js', { window });
+cargar('web/src/data/catalogo-landing.js', { window });
+cargar('web/app/canales.js', { window });
+cargar('web/app/formularios.js', { window });
 const { CATALOGO_TRAMITES: tramites, CANAL_WHATSAPP: canal, FORMULARIOS_TRAMITES: formularios } = window;
 
 const q = v => (v === undefined || v === null || v === '' ? 'NULL' : `'${String(v).replace(/'/g, "''")}'`);

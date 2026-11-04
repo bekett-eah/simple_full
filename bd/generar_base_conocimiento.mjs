@@ -1,11 +1,11 @@
 // Genera bd/base_conocimiento.json para el asistente de IA (asistente_ia.py), con los mismos datos del rediseño
 // que usa generar_semilla.mjs:
-//   src/data/catalogo-landing.js              → los 118 trámites
-//   archivos/catalogo_118_tramites_simple_sv.md → la ficha de cada trámite (sección "#### N.")
-//   nuevoDiseño/canales.js                    → nivel de WhatsApp y trámites judiciales
-//   nuevoDiseño/formularios.js                → los formularios completos (todos los pasos), sin las listas largas
-//   nuevoDiseño/citas.js                      → sedes y horarios de los trámites con cita
-//   nuevoDiseño/ciudadano.js                  → solo los NOMBRES de los campos que vienen de la Identidad Digital (nunca los valores)
+//   web/src/data/catalogo-landing.js                 → los 118 trámites
+//   docs/tramites/catalogo_118_tramites_simple_sv.md → la ficha de cada trámite (sección "#### N.")
+//   web/app/canales.js                               → nivel de WhatsApp y trámites judiciales
+//   web/app/formularios.js                           → los formularios completos (todos los pasos), sin las listas largas
+//   web/app/citas.js                                 → sedes y horarios de los trámites con cita
+//   web/app/ciudadano.js                             → solo los NOMBRES de los campos que vienen de la Identidad Digital (nunca los valores)
 // Python lo lee sin tener que interpretar JavaScript. En producción se reemplaza por la vista v_tramite_chatbot y la API
 // interna del reporte (GET /api/tramites?buscar=, /api/tramites/{n}/formulario, /api/tramites/{n}/canal).
 // Uso: node bd/generar_base_conocimiento.mjs
@@ -15,7 +15,7 @@ import vm from 'node:vm';
 const raiz = new URL('..', import.meta.url);
 const leer = ruta => readFileSync(new URL(ruta, raiz), 'utf8');
 const window = {};
-['src/data/catalogo-landing.js', 'nuevoDiseño/canales.js', 'nuevoDiseño/formularios.js', 'nuevoDiseño/citas.js', 'nuevoDiseño/ciudadano.js']
+['web/src/data/catalogo-landing.js', 'web/app/canales.js', 'web/app/formularios.js', 'web/app/citas.js', 'web/app/ciudadano.js']
   .forEach(ruta => vm.runInNewContext(leer(ruta), { window }));
 const { CATALOGO_TRAMITES: tramites, CANAL_WHATSAPP: canal, FORMULARIOS_TRAMITES: formularios, CITAS_TRAMITES: citas, CIUDADANO: cuenta } = window;
 
@@ -27,7 +27,7 @@ const MAX_OPCIONES = 60;
 
 // Ficha de cada trámite en el catálogo en Markdown: desde "#### N. Nombre" hasta el siguiente encabezado
 const fichas = {};
-const md = leer('archivos/catalogo_118_tramites_simple_sv.md').split('\n');
+const md = leer('docs/tramites/catalogo_118_tramites_simple_sv.md').split('\n');
 let actual = null;
 md.forEach(linea => {
   const encabezado = linea.match(/^#### (\d+)\. /);

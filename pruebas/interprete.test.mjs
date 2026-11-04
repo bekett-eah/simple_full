@@ -1,4 +1,4 @@
-// Pruebas del intérprete del navegador (nuevoDiseño/interprete.js): protección de datos antes de enviar a la IA y
+// Pruebas del intérprete del navegador (web/app/interprete.js): protección de datos antes de enviar a la IA y
 // el modo básico (sin IA). Uso: node --test pruebas/*.test.mjs
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -9,8 +9,8 @@ const raiz = new URL('..', import.meta.url);
 const window = {};
 // Como una página abierta con file://: el intérprete no intenta llamar a la IA
 const contexto = vm.createContext({ window, location: { protocol: 'file:', search: '' }, performance, setTimeout, clearTimeout });
-['src/data/catalogo-landing.js', 'nuevoDiseño/formularios.js', 'nuevoDiseño/citas.js', 'nuevoDiseño/ciudadano.js',
-  'nuevoDiseño/pasos-tramite.js', 'nuevoDiseño/motor-tramite.js', 'nuevoDiseño/interprete.js']
+['web/src/data/catalogo-landing.js', 'web/app/formularios.js', 'web/app/citas.js', 'web/app/ciudadano.js',
+  'web/app/pasos-tramite.js', 'web/app/motor-tramite.js', 'web/app/interprete.js']
   .forEach(ruta => vm.runInContext(readFileSync(new URL(ruta, raiz), 'utf8'), contexto, { filename: ruta }));
 const I = window.INTERPRETE;
 const M = window.MOTOR_TRAMITE;

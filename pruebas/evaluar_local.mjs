@@ -1,4 +1,4 @@
-// Línea base sin IA: el modo básico del intérprete (nuevoDiseño/interprete.js) sobre pruebas/evaluacion_nlu.jsonl,
+// Línea base sin IA: el modo básico del intérprete (web/app/interprete.js) sobre pruebas/evaluacion_nlu.jsonl,
 // con la misma calificación que evaluar_asistente.py (que usa la IA real y gasta créditos). Gratis.
 // Uso: node pruebas/evaluar_local.mjs
 import { readFileSync } from 'node:fs';
@@ -7,8 +7,8 @@ import vm from 'node:vm';
 const raiz = new URL('..', import.meta.url);
 const window = {};
 const contexto = vm.createContext({ window, location: { protocol: 'file:', search: '' }, performance, setTimeout, clearTimeout });
-['src/data/catalogo-landing.js', 'nuevoDiseño/formularios.js', 'nuevoDiseño/citas.js', 'nuevoDiseño/ciudadano.js',
-  'nuevoDiseño/pasos-tramite.js', 'nuevoDiseño/motor-tramite.js', 'nuevoDiseño/interprete.js']
+['web/src/data/catalogo-landing.js', 'web/app/formularios.js', 'web/app/citas.js', 'web/app/ciudadano.js',
+  'web/app/pasos-tramite.js', 'web/app/motor-tramite.js', 'web/app/interprete.js']
   .forEach(ruta => vm.runInContext(readFileSync(new URL(ruta, raiz), 'utf8'), contexto, { filename: ruta }));
 const { INTERPRETE: I, MOTOR_TRAMITE: M } = window;
 
