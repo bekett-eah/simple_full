@@ -1,15 +1,15 @@
 # Trámites del catálogo: mapeados y por mapear
 
-Actualizado el 3 de noviembre de 2026. Son los 118 trámites del catálogo (web/src/data/catalogo-landing.js), en el mismo orden en que los tenemos en el sitio: primero las cuatro categorías del chat y después el resto del catálogo, por número. «Mapeado» quiere decir que su formulario real de SIMPLE está copiado en nuevoDiseño/formularios.js.
+Actualizado el 4 de noviembre de 2026. Son los 118 trámites del catálogo (web/src/data/catalogo-landing.js), en el mismo orden en que los tenemos en el sitio: primero las cuatro categorías del chat y después el resto del catálogo, por número. «Mapeado» quiere decir que su formulario real de SIMPLE está copiado en web/app/formularios.js.
 
 |                                                                                     | Cantidad |
 | ----------------------------------------------------------------------------------- | -------- |
 | ✅ Mapeado completo (hasta el pago o, si es gratis, hasta el último paso sin enviar) | 87       |
-| 🟡 Mapeado en parte                                                                 | 8        |
-| ⬜ Sin mapear                                                                        | 23       |
+| 🟡 Mapeado en parte                                                                 | 24       |
+| ⬜ Sin mapear                                                                        | 7        |
 | **Total**                                                                           | **118**  |
 
-Todo trámite que tiene formulario se puede hacer dentro de WhatsApp y del chatbot sin hacer nada más, porque los dos chats leen formularios.js. Los que no están mapeados se encuentran en los chats, pero se hacen en el portal de la institución. El 71 entra en los chats, aunque solo con su primera pantalla; el 116 llega hasta la verificación del DUI, el 44 y el 45, hasta donde el VMT pide un código de registro de transportista real, y el 108, hasta la elección de la asociación o federación.
+Todo trámite que tiene formulario se puede hacer dentro de WhatsApp y del chatbot sin hacer nada más, porque los dos chats leen formularios.js. Los que no están mapeados se encuentran en los chats, pero se hacen en el portal de la institución. El 71 entra en los chats, aunque solo con su primera pantalla; el 116 llega hasta la verificación del DUI, el 44 y el 45, hasta donde el VMT pide un código de registro de transportista real, y el 108, hasta la elección de la asociación o federación. Los 16 de la ronda del 4 de noviembre (VMT, MOP, MARN, ISBM y la Alcaldía Santa Ana Oeste) llegan hasta la nota legal o la declaración jurada.
 
 ## Pruebas en los tres canales (2 de noviembre de 2026)
 
@@ -20,6 +20,37 @@ Se recorrieron de forma automática los 59 formularios de entonces en los tres c
 - **Chatbot** (el asistente con sesión): hasta «Confirmar y pagar» o «Confirmar y enviar».
 
 Los 59 llegan al final en los tres. También se probaron las variantes que cambian los pasos: estudiante activo o no (86), para ti o para otra persona (76, 77, 78, 87 y 94), reposición por robo o por deterioro (15 y 16), cita nueva o para reponer una perdida (78), con expedientes en la PGR (94), consulta o capacitación (115) y pensión propia o de un tercero (116).
+
+## Ronda del 4 de noviembre de 2026: hasta la nota legal o la declaración jurada
+
+Los 16 empiezan con una nota legal o una declaración jurada que el ciudadano debe aceptar en el portal. En esta ronda no se aceptaron, así que se copió solo hasta ahí, y el último paso dice que la institución pide después los datos y los documentos del trámite. No se escribió ningún dato en los portales.
+
+| N.º | Portal | Hasta dónde se leyó |
+|---|---|---|
+| 35 y 36 | VMT (trámite 351) | El código de autorización de SERTRACEN (hay que confirmar que lo tienes) y la nota legal |
+| 37 | VMT (trámite 429) | Los requisitos (los documentos del representante del menor) y la declaración jurada |
+| 38 | VMT (trámite 307) | La nota legal |
+| 39 | VMT (trámite 349) | La nota legal |
+| 40, 41 y 43 | VMT (trámite 320) | La nota legal. Es el mismo formulario de constancias y de modificación física |
+| 42 | VMT (trámite 361) | La nota legal |
+| 46 | VMT (trámite 341) | La nota legal y el aviso de no repetir el correo de otro registro de transportista |
+| 47 | VMT (trámite 411) | La nota legal |
+| 69 | MARN (trámite 408) | La nota legal, con el aviso de que el pago no se devuelve |
+| 88 | ISBM (trámite 434) | La declaración jurada y la cláusula antisoborno |
+| 89 | ISBM (trámite 426) | La declaración jurada, la cláusula antisoborno y el DUI del docente fallecido |
+| 103 | Alcaldía Santa Ana Oeste (trámite 353) | La nota legal |
+| 117 | MOP (trámite 387) | La nota legal |
+
+Lo que no se copió tal cual:
+
+- La pregunta «¿Deseas continuar con el trámite?» que sigue a cada nota, porque en el rediseño no se pregunta. Tampoco la opción «Desistir por el momento» del 37.
+- Las notas legales y las declaraciones están en lenguaje sencillo, sin cambiar lo que dicen.
+
+Pruebas: los 16 se recorrieron en los tres canales (48 recorridos), todos hasta el final. En el chatbot, el recorrido automático necesita `window.__numeroRecorrido = N` antes de `__recorrer`, porque la página quita `?asistente=N` de la dirección. Sin eso, los campos que no salen de la cuenta, como el DUI del docente del 89, se llenan con «Dato de prueba» y el recorrido falla.
+
+Borradores que quedaron abiertos en el navegador de las pruebas, sin datos: VMT 16300939, 16461884, 16461886, 16461891, 16461897, 16461904, 16462097 (el 37, en la declaración jurada) y 16462229; MARN 16393362; Alcaldía Santa Ana Oeste 16387791; ISBM 16462240 y 16462244; MOP 16462250.
+
+Siguen sin mapear: el 56 a 60 (el portal del ISP pide un usuario propio, no la Identidad Digital), el 90 (ISBM) y el 106 (AMP), que solo tienen enlace en simple.sv y no se sabe qué trámite de su portal corresponde.
 
 ## Tercera ronda del 3 de noviembre de 2026: FONAT y FOSEP
 
@@ -184,7 +215,7 @@ Lo que las pruebas encontraron y ya se corrigió:
 
 ## Resto del catálogo (97)
 
-### Ya mapeados (74)
+### Ya mapeados (90)
 
 | N.º | Trámite | Institución | Estado | Probado en formulario, WhatsApp y chatbot |
 |---|---|---|---|---|
@@ -222,12 +253,24 @@ Lo que las pruebas encontraron y ya se corrigió:
 | 32 | Transferencia de funcionamiento de fábrica de cilindros para envasado | DGEHM | ✅ Hasta la declaración jurada, sin enviar (gratis) | ✅ Los tres |
 | 33 | Transferencia de funcionamiento de taller de reparación y mantenimiento de cilindros de GLP | DGEHM | ✅ Hasta la declaración jurada, sin enviar (gratis) | ✅ Los tres |
 | 34 | Transferencia de funcionamiento de taller para instalación de GLP vehicular | DGEHM | ✅ Hasta la declaración jurada, sin enviar (gratis) | ✅ Los tres |
+| 35 | Apostillado de certificación de licencia de conducir | VMT | 🟡 Hasta la nota legal: el portal pide además el código de autorización de SERTRACEN; lo que sigue se ve al aceptar la nota | ✅ Los tres |
+| 36 | Apostillado de constancia de récord de licencia de conducir | VMT | 🟡 Hasta la nota legal: el portal pide además el código de autorización de SERTRACEN; lo que sigue se ve al aceptar la nota | ✅ Los tres |
+| 37 | Autorización de fianza moral | VMT | 🟡 Hasta la declaración jurada, con los requisitos: lo que sigue se ve al aceptarla | ✅ Los tres |
+| 38 | Autorización de realización de emisión de gases | VMT | 🟡 Hasta la nota legal: lo que sigue se ve al aceptarla | ✅ Los tres |
+| 39 | Certificación de tarifario | VMT | 🟡 Hasta la nota legal: lo que sigue se ve al aceptarla | ✅ Los tres |
+| 40 | Constancia de capacidad | VMT | 🟡 Hasta la nota legal: lo que sigue se ve al aceptarla | ✅ Los tres |
+| 41 | Constancia de modificación a la capacidad | VMT | 🟡 Hasta la nota legal: lo que sigue se ve al aceptarla | ✅ Los tres |
+| 42 | Constancia para la obtención de la exención de IVA | VMT | 🟡 Hasta la nota legal: lo que sigue se ve al aceptarla | ✅ Los tres |
+| 43 | Modificación física de vehículo de transporte de carga | VMT | 🟡 Hasta la nota legal: lo que sigue se ve al aceptarla | ✅ Los tres |
 | 44 | Permiso especial para el transporte de materiales peligrosos nacional e internacional | VMT | 🟡 Hasta los materiales: el portal valida el código del registro de transportista y con uno de prueba no deja ver lo que sigue; pago del catálogo ($39.55 o $56.50) | ✅ Los tres |
 | 45 | Permiso especial para el transporte de objetos que sobrepasen el peso y/o dimensiones establecidas en la ley nacional e internacional (autorización de transporte de cargas mayores a las permitidas) | VMT | 🟡 Hasta la carga y el recorrido: el portal valida el código del registro de transportista y con uno de prueba no deja ver lo que sigue; pago del catálogo ($39.55) | ✅ Los tres |
+| 46 | Registro de transportista de carga nacional e internacional | VMT | 🟡 Hasta la nota legal: lo que sigue se ve al aceptarla | ✅ Los tres |
+| 47 | Renovación de registro de transportistas de carga nacional e internacional | VMT | 🟡 Hasta la nota legal: lo que sigue se ve al aceptarla | ✅ Los tres |
 | 65 | Matrícula de fierro para herrar ganado | MAG | ✅ Hasta el último paso, sin enviar: el MAG revisa y después indica el pago | ✅ Los tres |
 | 66 | Nota de exoneración de visado de importación de productos agrícolas | MAG | ✅ Hasta el último paso, sin enviar (gratis) | ✅ Los tres |
 | 67 | Nota de exoneración de visado de importación de productos utilizados en alimentación animal | MAG | ✅ Hasta el último paso, sin enviar (gratis) | ✅ Los tres |
 | 68 | Notificación de asamblea general | MAG | ✅ Hasta el último paso, sin enviar (gratis) | ✅ Los tres |
+| 69 | Certificación técnica para fines judiciales y de seguros | MARN | 🟡 Hasta la nota legal: lo que sigue se ve al aceptarla | ✅ Los tres |
 | 70 | Información LIDAR para la investigación científica y el desarrollo experimental para los sectores de educación superior y gobierno | MARN | ✅ Hasta el último paso, sin enviar (gratis) | ✅ Los tres |
 | 71 | Información gratuita de fenómenos naturales | MARN | 🟡 Solo la primera pantalla (datos personales) | ✅ Los tres |
 | 72 | Permiso de incubación y recolección de huevos de tortuga marina | MARN | ✅ Hasta la declaración jurada, sin enviar (gratis) | ✅ Los tres |
@@ -243,6 +286,8 @@ Lo que las pruebas encontraron y ya se corrigió:
 | 85 | Certificación de notas para graduados de ENA | ENA | ✅ Hasta el pago ($10.00) | ✅ Los tres |
 | 86 | Constancia de estudios | ENA | ✅ Hasta el pago ($5.00; en el portal llega en la etapa siguiente) | ✅ Los tres |
 | 87 | Reingreso para la carrera de agrónomo en grado técnico | ENA | ✅ Hasta el pago ($5.00) | ✅ Los tres |
+| 88 | Ayuda económica por la adquisición de anteojos | ISBM | 🟡 Hasta la declaración jurada y la cláusula antisoborno: lo que sigue se ve al aceptarlas | ✅ Los tres |
+| 89 | Beneficio de ayuda económica para gastos funerarios | ISBM | 🟡 Hasta la declaración jurada y la cláusula antisoborno, con el DUI del docente fallecido: lo que sigue se ve al aceptarlas | ✅ Los tres |
 | 91 | Constancia de no inscrito para persona natural o jurídica como patrono en el ISSS | ISSS | ✅ Hasta el último paso, sin enviar (gratis): el ISSS verifica el documento del patrono | ✅ Los tres |
 | 92 | Solvencia patronal de régimen salud | ISSS | ✅ Hasta el último paso, sin enviar (gratis): el ISSS verifica el documento del patrono | ✅ Los tres |
 | 93 | Fijación de cuota alimenticia a obligados nacionales y residentes en el extranjero | PGR | ✅ Hasta la declaración jurada, sin enviar (gratis), con 1 a 5 beneficiarios y convocados | ✅ Los tres |
@@ -252,6 +297,7 @@ Lo que las pruebas encontraron y ya se corrigió:
 | 97 | Solicitud de constancia de publicación en el Diario Oficial | DIN | ✅ Hasta el pago ($3.25; sin pago si tienes exención) | ✅ Los tres |
 | 98 | Solicitud de publicación en Diario Oficial | DIN | ✅ Hasta la declaración jurada, sin enviar: el costo depende de las tarifas del Diario Oficial y la Imprenta lo avisa al revisar | ✅ Los tres |
 | 102 | Solicitud de crédito | FOSOFAMILIA | ✅ Hasta el último paso, sin enviar (gratis) | ✅ Los tres |
+| 103 | Solvencia municipal y pago de impuestos municipales de los distritos de alcaldía Santa Ana Oeste | Alcaldía Santa Ana Oeste | 🟡 Hasta la nota legal: lo que sigue se ve al aceptarla | ✅ Los tres |
 | 104 | Solvencia IAIP | IAIP | ✅ Hasta el último paso, sin enviar (gratis) | ✅ Los tres |
 | 107 | Estado de cuenta | CORSAIN | ✅ Hasta el último paso, sin enviar (gratis) | ✅ Los tres |
 | 108 | Certificación de inscripción de federaciones y asociaciones deportivas | INDES | 🟡 Hasta la elección de la asociación o federación: lo que sigue se ve cuando aceptes la declaración jurada | ✅ Los tres |
@@ -261,32 +307,17 @@ Lo que las pruebas encontraron y ya se corrigió:
 | 114 | Historial de pago de seguros de carácter voluntario | CME-MINED | ✅ Hasta el último paso, sin enviar (gratis) | ✅ Los tres |
 | 115 | Capacitación o consulta sobre derecho de competencia | Superintendencia de Competencia | ✅ Hasta el último paso, sin enviar (gratis), en consulta y en capacitación | ✅ Los tres |
 | 116 | Constancia de pensión de veteranos, excombatientes y beneficiarios | INABVE | 🟡 Hasta la verificación del DUI: la cuenta de prueba no es de un pensionado y no deja ver el resumen de la pensión | ✅ Los tres |
+| 117 | Constancia de competencia | MOP | 🟡 Hasta la nota legal: lo que sigue se ve al aceptarla | ✅ Los tres |
 | 118 | Formulario de inscripción registro nacional de consultores | FOSEP | ✅ Hasta el último paso, sin enviar (gratis): su único paso envía la inscripción | ✅ Los tres |
 
-### Por mapear (23)
+### Por mapear (7)
 
 | N.º | Trámite | Institución | Estado | Probado en formulario, WhatsApp y chatbot |
 |---|---|---|---|---|
-| 35 | Apostillado de certificación de licencia de conducir | VMT | ⬜ Sin mapear | No: en el portal de la institución |
-| 36 | Apostillado de constancia de récord de licencia de conducir | VMT | ⬜ Sin mapear | No: en el portal de la institución |
-| 37 | Autorización de fianza moral | VMT | ⬜ Sin mapear | No: en el portal de la institución |
-| 38 | Autorización de realización de emisión de gases | VMT | ⬜ Sin mapear | No: en el portal de la institución |
-| 39 | Certificación de tarifario | VMT | ⬜ Sin mapear | No: en el portal de la institución |
-| 40 | Constancia de capacidad | VMT | ⬜ Sin mapear | No: en el portal de la institución |
-| 41 | Constancia de modificación a la capacidad | VMT | ⬜ Sin mapear | No: en el portal de la institución |
-| 42 | Constancia para la obtención de la exención de IVA | VMT | ⬜ Sin mapear | No: en el portal de la institución |
-| 43 | Modificación física de vehículo de transporte de carga | VMT | ⬜ Sin mapear | No: en el portal de la institución |
-| 46 | Registro de transportista de carga nacional e internacional | VMT | ⬜ Sin mapear | No: en el portal de la institución |
-| 47 | Renovación de registro de transportistas de carga nacional e internacional | VMT | ⬜ Sin mapear | No: en el portal de la institución |
 | 56 | Constancia de afiliación y beneficio | ISP | ⬜ Su portal no acepta Identidad Digital: pide un usuario y contraseña propios del ISP. Sin mapear | No: en el portal de la institución |
 | 57 | Constancia de beneficiario inscrito | ISP | ⬜ Su portal no acepta Identidad Digital: pide un usuario y contraseña propios del ISP. Sin mapear | No: en el portal de la institución |
 | 58 | Constancia de cotizante no pensionado | ISP | ⬜ Su portal no acepta Identidad Digital: pide un usuario y contraseña propios del ISP. Sin mapear | No: en el portal de la institución |
 | 59 | Constancia de número de afiliación | ISP | ⬜ Su portal no acepta Identidad Digital: pide un usuario y contraseña propios del ISP. Sin mapear | No: en el portal de la institución |
 | 60 | Constancia de pensionado | ISP | ⬜ Su portal no acepta Identidad Digital: pide un usuario y contraseña propios del ISP. Sin mapear | No: en el portal de la institución |
-| 69 | Certificación técnica para fines judiciales y de seguros | MARN | ⬜ Leído el primer paso (nota legal): falta que aceptes la nota en tu Chrome para ver el resto. Sin mapear | No: en el portal de la institución |
-| 88 | Ayuda económica por la adquisición de anteojos | ISBM | ⬜ Leído el primer paso (declaración jurada y cláusula antisoborno): falta que la aceptes en el navegador de las pruebas. Sin mapear | No: en el portal de la institución |
-| 89 | Beneficio de ayuda económica para gastos funerarios | ISBM | ⬜ Leído el primer paso (declaración jurada y cláusula antisoborno): falta que la aceptes en el navegador de las pruebas. Sin mapear | No: en el portal de la institución |
 | 90 | Reembolsos por gastos médico-hospitalarios | ISBM | ⬜ Sin mapear | No: en el portal de la institución |
-| 103 | Solvencia municipal y pago de impuestos municipales de los distritos de alcaldía Santa Ana Oeste | Alcaldía Santa Ana Oeste | ⬜ Leído el primer paso (nota legal): falta que aceptes la nota en tu Chrome para ver el resto. Sin mapear | No: en el portal de la institución |
 | 106 | Autorización y registro de agentes marítimos | AMP | ⬜ Sin mapear | No: en el portal de la institución |
-| 117 | Constancia de competencia | MOP | ⬜ Leído el primer paso (nota legal): falta que aceptes la nota en tu Chrome para ver el resto. Sin mapear | No: en el portal de la institución |
