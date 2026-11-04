@@ -18,6 +18,8 @@ python3.13 backend/servidor.py 8080 0.0.0.0
 
 Más comandos (red local, segundo plano, variables): [docs/comandos-servidor.md](docs/comandos-servidor.md).
 
+**Producción:** Netlify despliega `main` desde GitHub y publica solo `web/` ([netlify.toml](netlify.toml)). Ahí no hay backend de Python, así que el asistente funciona en modo básico.
+
 ## Estructura
 
 ```

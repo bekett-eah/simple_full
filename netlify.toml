@@ -1,0 +1,43 @@
+# Netlify publica solo web/, igual que backend/servidor.py en local.
+# El resto del repositorio (bd/, docs/, backend/, herramientas/, qa/…) no sale a internet.
+# Este archivo tiene prioridad sobre la configuración de la interfaz de Netlify.
+[build]
+  publish = "web"
+
+# Direcciones anteriores a la reestructuración: los enlaces ya compartidos siguen funcionando.
+# Netlify conserva los parámetros (?n=, ?destino=, ?hola=1) al redirigir.
+[[redirects]]
+  from = "/nuevoDiseño/*"
+  to = "/app/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/nuevoDise%C3%B1o/*"
+  to = "/app/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/SIMPLE ACTUAL/Login - Gobierno de El Salvador.html"
+  to = "/sitio-actual/login.html"
+  status = 301
+
+[[redirects]]
+  from = "/SIMPLE%20ACTUAL/Login%20-%20Gobierno%20de%20El%20Salvador.html"
+  to = "/sitio-actual/login.html"
+  status = 301
+
+[[redirects]]
+  from = "/SIMPLE ACTUAL/Identidad digital.html"
+  to = "/sitio-actual/identidad-digital.html"
+  status = 301
+
+[[redirects]]
+  from = "/SIMPLE%20ACTUAL/Identidad%20digital.html"
+  to = "/sitio-actual/identidad-digital.html"
+  status = 301
+
+# Enlaces /web/… que circularon mientras Netlify publicaba la raíz del repositorio
+[[redirects]]
+  from = "/web/*"
+  to = "/:splat"
+  status = 301
