@@ -15,7 +15,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 RAIZ = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(RAIZ))
+sys.path.insert(0, str(RAIZ / "backend"))
 import asistente_ia  # noqa: E402
 import servidor  # noqa: E402
 
@@ -178,18 +178,25 @@ class Servidor(Base):
 
     def setUp(self):
         super().setUp()
-        manejador = functools.partial(servidor.ConRangos, directory=str(RAIZ))
-        self.http = ThreadingHTTPServer(("127.0.0.1", 0), manejador)
-        threading.Thread(target=self.http.serve_forever, daemon=True).start()
-        self.url = f"http://127.0.0.1:{self.http.server_address[1]}"
+        self.servidores = []
+        # Igual que al ejecutarlo: sirve solo la carpeta pública web/
+        self.url = self.levantar(servidor.WEB)
+
+    def levantar(self, carpeta):
+        manejador = functools.partial(servidor.ConRangos, directory=str(carpeta))
+        http = ThreadingHTTPServer(("127.0.0.1", 0), manejador)
+        threading.Thread(target=http.serve_forever, daemon=True).start()
+        self.servidores.append(http)
+        return f"http://127.0.0.1:{http.server_address[1]}"
 
     def tearDown(self):
-        self.http.shutdown()
-        self.http.server_close()
+        for http in self.servidores:
+            http.shutdown()
+            http.server_close()
         super().tearDown()
 
-    def pedir(self, ruta, datos=None):
-        peticion = urllib.request.Request(self.url + ruta, data=datos, headers={"Content-Type": "application/json"} if datos else {})
+    def pedir(self, ruta, datos=None, url=None):
+        peticion = urllib.request.Request((url or self.url) + ruta, data=datos, headers={"Content-Type": "application/json"} if datos else {})
         try:
             with urllib.request.urlopen(peticion) as r:
                 return r.status, r.read()
@@ -201,8 +208,13 @@ class Servidor(Base):
         estado, contenido = self.pedir("/api/asistente", cuerpo())
         self.assertEqual(estado, 503)
         self.assertEqual(json.loads(contenido)["modo"], "sin_ia")
-        self.assertEqual(self.pedir("/nuevoDiseño/motor-tramite.js".replace("ñ", "%C3%B1"))[0], 200)
+        self.assertEqual(self.pedir("/app/motor-tramite.js")[0], 200)
+        self.assertEqual(self.pedir("/index.html")[0], 200)
         self.assertEqual(self.pedir("/api/otra", cuerpo())[0], 404)
+
+    def test_solo_publica_la_carpeta_web(self):
+        for ruta in ("/bd/base_conocimiento.json", "/backend/asistente_ia.py", "/docs/comandos-servidor.md", "/../bd/base_conocimiento.json"):
+            self.assertEqual(self.pedir(ruta)[0], 404, ruta)
 
     def test_la_bitacora_no_se_sirve(self):
         privada = Path(servidor.PRIVADA)
@@ -210,10 +222,13 @@ class Servidor(Base):
         privada.mkdir(exist_ok=True)
         archivo = privada / "prueba-no-servir.txt"
         archivo.write_text("privado", encoding="utf-8")
+        # Aunque alguien sirva el repositorio completo (python3 backend/servidor.py 8080 0.0.0.0 .), la bitácora no sale
+        completo = self.levantar(RAIZ)
         try:
-            self.assertEqual(self.pedir("/registros/prueba-no-servir.txt")[0], 404)
-            self.assertEqual(self.pedir("/%72egistros/prueba-no-servir.txt")[0], 404)
-            self.assertEqual(self.pedir("/registros/../registros/prueba-no-servir.txt")[0], 404)
+            self.assertEqual(self.pedir("/registros/prueba-no-servir.txt", url=completo)[0], 404)
+            self.assertEqual(self.pedir("/%72egistros/prueba-no-servir.txt", url=completo)[0], 404)
+            self.assertEqual(self.pedir("/registros/../registros/prueba-no-servir.txt", url=completo)[0], 404)
+            self.assertEqual(self.pedir("/bd/base_conocimiento.json", url=completo)[0], 200)
         finally:
             archivo.unlink()
             if creada:

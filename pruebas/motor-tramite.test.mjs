@@ -1,4 +1,4 @@
-// Pruebas del motor de trámites (nuevoDiseño/motor-tramite.js) con los formularios reales del rediseño.
+// Pruebas del motor de trámites (web/app/motor-tramite.js) con los formularios reales del rediseño.
 // Uso: node --test pruebas/
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -9,8 +9,8 @@ const raiz = new URL('..', import.meta.url);
 function cargar() {
   const window = {};
   const contexto = vm.createContext({ window });
-  ['src/data/catalogo-landing.js', 'nuevoDiseño/formularios.js', 'nuevoDiseño/citas.js', 'nuevoDiseño/ciudadano.js',
-    'nuevoDiseño/mis-tramites.js', 'nuevoDiseño/pasos-tramite.js', 'nuevoDiseño/motor-tramite.js']
+  ['web/src/data/catalogo-landing.js', 'web/app/formularios.js', 'web/app/citas.js', 'web/app/ciudadano.js',
+    'web/app/mis-tramites.js', 'web/app/pasos-tramite.js', 'web/app/motor-tramite.js']
     .forEach(ruta => vm.runInContext(readFileSync(new URL(ruta, raiz), 'utf8'), contexto, { filename: ruta }));
   return window;
 }
