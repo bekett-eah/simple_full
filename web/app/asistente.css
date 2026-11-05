@@ -23,12 +23,18 @@
 .l2-paso-msg .l2-paso-card-texto { font-size: 12.5px; line-height: 1.35; }
 .l2-paso-msg strong { display: block; margin-bottom: 1px; font-size: 14px; font-weight: 800; color: var(--color-blue-primary); }
 
+/* Netlify (plan gratuito) pone su insignia "Powered by Netlify" abajo a la derecha de todas las páginas, encima de todo,
+   y no se puede quitar ni mover sin pagar. Ocupa hasta unos 55 px desde el borde inferior: los botones flotantes, los pasos
+   de Indexlogin y la barra de escribir del asistente dejan ese espacio libre para que la insignia no los tape.
+   Fuera de Netlify gratuito, 0px deja todo como estaba: ver docs/despliegue/insignia-netlify.md */
+:root { --espacio-insignia: 56px; }
+
 /* Asistente lateral */
-.l2-fab { position: fixed; right: 16px; bottom: 16px; z-index: 60; min-height: 52px; padding: 8px 18px 8px 10px; border-radius: var(--radius-pill); border: none; background: var(--color-blue-primary); color: #FFFFFF; font-weight: 700; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; box-shadow: var(--shadow-hover); }
+.l2-fab { position: fixed; right: 16px; bottom: calc(16px + var(--espacio-insignia)); z-index: 60; min-height: 52px; padding: 8px 18px 8px 10px; border-radius: var(--radius-pill); border: none; background: var(--color-blue-primary); color: #FFFFFF; font-weight: 700; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; box-shadow: var(--shadow-hover); }
 .l2-fab-robot { width: 36px; height: 36px; display: block; flex-shrink: 0; }
 /* Landing e Indexlogin: el asistente y WhatsApp en una fila, abajo a la derecha (WhatsApp en la orilla). El asistente
    es un círculo con el robot que se abre hacia la izquierda al pasar el cursor (o con el foco) y dice "¿Necesitas ayuda?" */
-.l2-flotantes { position: fixed; right: 16px; bottom: 16px; z-index: 60; display: flex; align-items: center; gap: 12px; }
+.l2-flotantes { position: fixed; right: 16px; bottom: calc(16px + var(--espacio-insignia)); z-index: 60; display: flex; align-items: center; gap: 12px; }
 .l2-flotantes .l2-fab { position: static; }
 .l2-fab:focus-visible { outline: 3px solid var(--border-focus); outline-offset: 3px; }
 .l2-fab-circulo { height: 56px; min-height: 56px; padding: 0 10px; gap: 0; transition: padding 0.3s ease, gap 0.3s ease; }
@@ -79,7 +85,7 @@
 .l2-options { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; margin-top: 10px; }
 .l2-option { min-height: 44px; padding: 8px 14px; border-radius: var(--radius-pill); border: 1.5px solid var(--border-active); background: #FFFFFF; color: var(--color-blue-primary); font-weight: 700; font-size: 14px; cursor: pointer; }
 .l2-option:hover { background: var(--color-blue-soft); }
-.l2-form { display: flex; gap: 8px; padding: 14px 16px; border-top: 1px solid var(--border-subtle); background: #FFFFFF; }
+.l2-form { display: flex; gap: 8px; padding: 14px 16px calc(14px + var(--espacio-insignia)); border-top: 1px solid var(--border-subtle); background: #FFFFFF; }
 .l2-form input { flex: 1; min-width: 0; min-height: 44px; border-radius: var(--radius-pill); border: 1.5px solid var(--border-subtle); padding: 8px 16px; font-size: 16px; outline: none; }
 .l2-form input:focus { border-color: var(--color-blue-primary); }
 .l2-form .l2-btn { min-width: 44px; padding: 8px 14px; }

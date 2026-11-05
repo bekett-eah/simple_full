@@ -16,7 +16,7 @@
 
   <link rel="stylesheet" href="../src/styles/simple-light-vibrant.css">
   <script src="sesion.js"></script>
-  <link rel="stylesheet" href="asistente.css?v=9">
+  <link rel="stylesheet" href="asistente.css?v=10">
   <script src="transicion-vistas.js"></script>
   <script src="cambio-vista.js"></script>
   <script src="terminos.js" defer></script>
@@ -147,7 +147,7 @@
     /* ===== Línea de tiempo "Cómo funciona" =====
        Flotante sobre el botón del asistente. Primera visita: cada paso se enciende e irradia 3 s con su tarjeta.
        Después se esconde (sin hover). En el chat va fija, sin animación. */
-    .l2-pasos { position: fixed; right: 16px; bottom: 84px; z-index: 59; padding: 0 12px 8px; }
+    .l2-pasos { position: fixed; right: 16px; bottom: calc(84px + var(--espacio-insignia)); z-index: 59; padding: 0 12px 8px; }
     /* Terminada la intro, los pasos se esconden y ya no reaparecen al pasar el cursor por el botón del asistente */
     .l2-pasos.listo { opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0.25s; }
     .l2-pasos-linea { display: flex; gap: 40px; margin: 0; padding: 0; list-style: none; }
