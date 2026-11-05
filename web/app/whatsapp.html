@@ -17,6 +17,8 @@
       --wa-fondo: #0B141A; --wa-barra: #1F2C34; --wa-entrante: #202C33; --wa-saliente: #005C4B; --wa-campo: #2A3942;
       --wa-texto: #E9EDEF; --wa-secundario: #8696A0; --wa-verde: #00A884; --wa-visto: #53BDEB; --wa-chip: #182229;
       --wa-linea: rgba(134, 150, 160, 0.18);
+      /* Espacio para la insignia "Powered by Netlify" (ver docs/despliegue/insignia-netlify.md; 0px la deja como antes) */
+      --espacio-insignia: 56px;
     }
     *, *::before, *::after { box-sizing: border-box; }
     html, body { height: 100%; }
@@ -153,6 +155,9 @@
       .wa-escena { padding: 0; }
       .wa-telefono { width: 100%; height: 100dvh; border: 0; border-radius: 0; box-shadow: none; }
       .wa-cabecera { padding-top: calc(10px + env(safe-area-inset-top)); }
+      /* En el celular la barra de escribir llega al borde y la insignia "Powered by Netlify" (abajo a la derecha, plan
+         gratuito) tapaba el botón de enviar: se deja libre su espacio, como en asistente.css */
+      .wa-entrada { padding-bottom: calc(10px + max(var(--espacio-insignia), env(safe-area-inset-bottom))); }
     }
     @media (prefers-reduced-motion: reduce) {
       .wa-puntos i, .wa-adjuntar.espera, .wa-enviar.listo, .wa-hoja-panel, .wa-push { animation: none; }
